@@ -1,0 +1,17 @@
+{
+  "name": "Shop Academy",
+  "short_name": "Shop Academy",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0e1011",
+  "theme_color": "#111315",
+  "description": "Interactive machining, welding and fabrication training.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

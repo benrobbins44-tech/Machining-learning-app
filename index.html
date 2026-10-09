@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111315">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shop Academy">
+<link rel="manifest" href="manifest.json">
+<title>Shop Academy</title>
+<style>
+:root{--bg:#0e1011;--card:#181c1f;--card2:#22272b;--line:#30363a;--text:#f5f6f7;--muted:#aab2b7;--accent:#f0a83a;--good:#5dcc7b;--danger:#ef7777}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:10;padding:calc(12px + env(safe-area-inset-top)) 18px 13px;background:rgba(14,16,17,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;font-size:20px}.tag{font-size:12px;color:var(--muted);margin-top:2px}
+main{max-width:900px;margin:auto;padding:18px 16px 30px}.hero{padding:8px 2px 16px}.hero h1{font-size:30px;line-height:1.08;margin:4px 0 8px}.hero p{color:var(--muted);line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wide{grid-column:1/-1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.card h2,.card h3{margin:0 0 8px}.card p{color:var(--muted);line-height:1.5;margin:7px 0}
+.track{min-height:135px}.track .icon{font-size:28px}.track h3{margin-top:8px}
+button,.button{border:0;border-radius:11px;padding:11px 14px;font-weight:700;cursor:pointer;background:var(--accent);color:#171717}
+.secondary{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.small{padding:7px 10px;font-size:12px}.pill{display:inline-block;border:1px solid var(--line);background:var(--card2);padding:4px 8px;border-radius:999px;font-size:11px;color:#d9dddf;margin:2px}
+.progress{height:8px;background:#30363a;border-radius:20px;overflow:hidden;margin:9px 0}.progress span{display:block;height:100%;background:var(--accent)}
+.listrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.listrow:last-child{border-bottom:0}
+.check{width:26px;height:26px;border-radius:50%;background:var(--card2);display:grid;place-items:center;flex:0 0 26px}.done .check{background:var(--good);color:#111}.rowtext{flex:1}.rowtext b{display:block}.rowtext small{color:var(--muted)}
+.lesson p,.lesson li{line-height:1.65;color:#d9dddf}.lesson h2{font-size:25px}.lesson h3{margin-top:22px}
+.notice{background:#241e15;border-left:4px solid var(--accent);padding:12px;border-radius:8px;color:#ddd;margin:14px 0}
+input,select{width:100%;padding:12px;border-radius:10px;background:#0c0e0f;border:1px solid #4a5156;color:#fff;margin:5px 0 10px}
+.calcgrid{display:grid;grid-template-columns:1fr;gap:12px}
+.answer{padding:12px;background:var(--card2);border-radius:10px;margin:7px 0;cursor:pointer}.answer.correct{outline:2px solid var(--good)}.answer.wrong{outline:2px solid var(--danger)}
+.bottom{position:fixed;z-index:20;bottom:0;left:0;right:0;background:rgba(20,23,25,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 7px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr)}
+.bottom button{background:transparent;color:var(--muted);padding:7px 2px;font-size:10px}.bottom button.active{color:var(--accent)}.bottom span{display:block;font-size:20px;line-height:22px}
+@media(min-width:700px){.calcgrid{grid-template-columns:1fr 1fr}.bottom{max-width:700px;left:50%;transform:translateX(-50%);border-radius:18px 18px 0 0}.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="brand">⚙️ Shop Academy</div><div class="tag">Machining • Welding • Fabrication</div></header>
+<main id="app"></main>
+<nav class="bottom" id="nav"></nav>
+<script>
+const data={
+mach:{name:"Machining",icon:"⚙️",mods:[
+["M01","Shop Safety & Machine Awareness","Hazards, guarding, PPE, stored energy and safe work habits."],
+["M02","Measurement & Metrology","Rules, calipers, micrometers, indicators, bore gauges and technique."],
+["M03","Blueprint Reading","Views, dimensions, symbols, datums, tolerances and surface finish."],
+["M04","GD&T Fundamentals","Form, orientation, location, runout, datums and functional inspection."],
+["M05","Materials & Metallurgy","Steel families, aluminum, stainless, hardness, heat treatment and machinability."],
+["M06","Cutting Tools","HSS, carbide, inserts, geometry, chip formation and tool wear."],
+["M07","Drill Press & Bench Work","Center drilling, drilling, reaming, countersinking, tapping and deburring."],
+["M08","Manual Lathe I","Setup, chucking, facing, turning, parting and workholding."],
+["M09","Manual Lathe II","Boring, threading, tapers, fits and precision setups."],
+["M10","Manual Mill I","Vise setup, tramming, edge finding, squaring and slots."],
+["M11","Manual Mill II","Pockets, boring, drilling patterns, rotary work and advanced setups."],
+["M12","Speeds, Feeds & Chip Control","SFM, RPM, feed, depth of cut, chip load and troubleshooting."],
+["M13","CNC Fundamentals","Coordinates, offsets, tooling, G-code concepts and prove-out."],
+["M14","CNC Milling & CAM","Toolpaths, stepovers, simulation, workholding and process planning."],
+["M15","CNC Turning","Tool geometry, work offsets, canned cycles and process optimization."],
+["M16","Advanced Machining","Precision fixturing, tolerance stack-up, process capability and production."]
+]},
+weld:{name:"Welding",icon:"🔥",mods:[
+["W01","Welding Safety","Arc radiation, fumes, fire prevention, cylinders and PPE."],
+["W02","Arc & Heat Fundamentals","Polarity, heat input, arc length, travel speed and joint design."],
+["W03","SMAW / Stick","Electrodes, polarity, arc control, starts, stops and defects."],
+["W04","GMAW / MIG","Wire selection, gas, voltage, wire speed, stickout and transfer."],
+["W05","FCAW","Self-shielded vs gas-shielded flux core and structural applications."],
+["W06","GTAW / TIG","Tungsten, shielding gas, amperage, filler and aluminum."],
+["W07","Joint Fit-Up & Positions","Fillets, butt joints, positions, access and travel technique."],
+["W08","Metallurgy & HAZ","Heat affected zone, cracking, preheat and interpass control."],
+["W09","Weld Defects","Porosity, lack of fusion, undercut, cracking and corrective action."],
+["W10","Inspection & Quality","Visual inspection, discontinuities, procedure discipline and documentation."],
+["W11","Distortion Control","Sequence, fixturing, heat management and correction."],
+["W12","Advanced Welding","Process selection, complex assemblies and production thinking."]
+]},
+fab:{name:"Fabrication",icon:"🛠️",mods:[
+["F01","Fabrication Safety","Material handling, cutting, grinding, lifting and hot-work controls."],
+["F02","Layout & Datums","Centerlines, reference faces, scribes, punches and templates."],
+["F03","Sawing & Cutting","Bandsaws, abrasive cutting, plasma, oxy-fuel and edge prep."],
+["F04","Grinding & Edge Preparation","Bevels, fit-up preparation, grinding technique and finish."],
+["F05","Fit-Up & Fixturing","Tacking, clamps, jigs, squareness, alignment and sequence."],
+["F06","Sheet Metal","Bend allowance, K-factor, development and distortion."],
+["F07","Tube & Structural Steel","Notching, coping, gussets, brackets and frames."],
+["F08","Precision Fabrication","Tolerance stack-up, inspection and distortion correction."],
+["F09","Repair Fabrication","Failure assessment, repair strategy and field constraints."],
+["F10","Jigs & Fixtures","Repeatability, datum strategy and fixture design."],
+["F11","Hydraulic/Mechanical Assemblies","Pins, bushings, clearances, alignment and serviceability."],
+["F12","Capstone Fabrication","Plan, cut, fit, weld, inspect and document a complete assembly."]
+]}
+};
+const lessonDB={
+"M01":["Safety is a process. Before every operation identify rotating parts, stored energy, pinch points, hot material, ejection paths, sharp edges and fumes.","Use machine guarding, appropriate PPE and safe workholding. Never defeat guards/interlocks. Secure the work before cutting or drilling.","Professional habit: stop when the setup changes. Reassess hazards instead of assuming yesterday's setup is still safe."],
+"M02":["Measurement quality depends on clean surfaces, correct instrument selection, temperature, alignment and consistent contact pressure.","Use calipers for general dimensions and micrometers where finer control is required. Indicators are primarily comparative tools for alignment and runout.","Exercise: measure one shaft five times, record the readings and calculate the spread."],
+"M12":["For inch turning, a common starting relationship is RPM = (SFM × 3.82) / diameter in inches. For metric: RPM ≈ (Vc × 1000) / (π × D).","Feed, depth of cut and tool geometry interact. A formula gives a starting point; tooling data, machine rigidity and chip control determine the final choice.","Troubleshooting rule: verify workholding and tool condition, then change one process variable at a time."],
+"W01":["Welding creates UV/IR radiation, fumes, heat, sparks and fire hazards. Use suitable PPE, ventilation and hot-work controls.","Inspect leads, torches, regulators and cylinders. Keep combustibles away from hot work and know the shutdown/emergency procedure.","Never weld on unknown or potentially contaminated containers without a qualified safe procedure."],
+"W04":["MIG is a system: wire diameter, wire-feed speed, voltage, shielding gas, polarity, stickout and travel speed must work together.","Start from the consumable/equipment manufacturer's recommended range. A consistent arc, travel speed and torch angle are critical.","If a weld is poor, don't randomly turn every knob. Diagnose the symptom and isolate the relevant variable."],
+"F02":["Fabrication accuracy starts with a datum. Choose a reliable reference face or edge and build measurements from it.","Use a square, rule, scriber, combination square, center punch and templates deliberately. Clear marks reduce mistakes.","The professional version of 'measure twice, cut once' is: establish datum → mark → verify → cut → inspect."]
+};
+let S=JSON.parse(localStorage.getItem("shopAcademyV2")||'{"done":[],"xp":0,"shop":[],"tab":"home","onboard":false}');
+const all=()=>Object.entries(data).flatMap(([track,v])=>v.mods.map(m=>({id:m[0],title:m[1],desc:m[2],track:track,trackName:v.name,icon:v.icon})));
+const save=()=>localStorage.setItem("shopAcademyV2",JSON.stringify(S));
+function nav(){document.getElementById("nav").innerHTML=[["home","🏠","Home"],["learn","📚","Learn"],["calc","🧮","Tools"],["projects","🔨","Projects"],["shop","🏭","Shop"]].map(([id,i,t])=>`<button class="${S.tab===id?'active':''}" onclick="show('${id}')"><span>${i}</span>${t}</button>`).join("")}
+function show(tab){S.tab=tab;save();nav();({home,learn,calc,projects,shop}[tab])()}
+function home(){
+let pct=Math.round(S.done.length/all().length*100);
+document.getElementById("app").innerHTML=`<section class="hero"><h1>Learn the trade.<br>Build the skill.</h1><p>A structured path from fundamentals to advanced machining, welding and fabrication.</p></section>
+<div class="card"><h3>Your progress</h3><div class="progress"><span style="width:${pct}%"></span></div><p>${S.done.length}/${all().length} modules completed · ${S.xp} XP · ${pct}%</p><button onclick="show('learn')">Continue training</button></div>
+<div class="grid">${Object.entries(data).map(([k,v])=>{let n=v.mods.filter(x=>S.done.includes(x[0])).length;return `<div class="card track"><div class="icon">${v.icon}</div><h3>${v.name}</h3><p>${n}/${v.mods.length} complete</p><div class="progress"><span style="width:${n/v.mods.length*100}%"></span></div><button class="secondary small" onclick="track('${k}')">Open</button></div>`}).join("")}</div>
+<div class="notice"><b>Safety:</b> This is educational training, not a substitute for machine manuals, welding procedures, applicable codes, employer rules or qualified hands-on instruction.</div>`;
+}
+function track(k){let v=data[k];document.getElementById("app").innerHTML=`<button class="secondary small" onclick="show('learn')">← All tracks</button><h2>${v.icon} ${v.name}</h2>${v.mods.map(m=>`<div class="card listrow ${S.done.includes(m[0])?'done':''}" onclick="lesson('${m[0]}')"><div class="check">${S.done.includes(m[0])?'✓':''}</div><div class="rowtext"><b>${m[0]} · ${m[1]}</b><small>${m[2]}</small></div><span>›</span></div>`).join("")}`}
+function learn(){document.getElementById("app").innerHTML=`<div class="hero"><h2>Curriculum</h2><p>Follow the tracks in order, or jump directly to a subject.</p></div>${Object.entries(data).map(([k,v])=>`<div class="card"><h3>${v.icon} ${v.name}</h3><p>${v.mods.length} modules</p><button onclick="track('${k}')">View modules</button></div>`).join("")}`}
+function lesson(id){
+let m=all().find(x=>x.id===id), blocks=lessonDB[id]||[
+`This module develops your understanding of ${m.title.toLowerCase()}. Learn the terminology first, then connect it to an actual shop operation.`,
+"Professional workflow: identify the material and specification, establish a safe setup and datum, select the process and tooling, choose starting parameters from authoritative data, then inspect the result.",
+"Do not treat a calculator or generic table as the final authority. Manufacturer tooling data, machine limitations, welding procedures and applicable standards take precedence.",
+"Practice challenge: explain the operation, identify three likely failure modes, and describe how you would inspect the finished work."
+];
+document.getElementById("app").innerHTML=`<div class="lesson"><button class="secondary small" onclick="track('${m.track}')">← Back</button><span class="pill">${m.trackName}</span><h2>${m.id} · ${m.title}</h2>${blocks.map((x,i)=>`<h3>${i+1}. ${["Core concept","Shop application","Professional habit","Challenge"][i]}</h3><p>${x}</p>`).join("")}
+<div class="card"><h3>Knowledge check</h3><p>When troubleshooting a process, what is the best general approach?</p><div class="answer" onclick="answer(this,false)">Change many settings at once.</div><div class="answer" onclick="answer(this,false)">Ignore measurement and judge only by appearance.</div><div class="answer" onclick="answer(this,true)">Verify setup and isolate variables by changing one relevant factor at a time.</div><div id="result"></div></div></div>`;
+}
+function answer(el,ok){document.querySelectorAll(".answer").forEach(x=>x.style.pointerEvents="none");el.classList.add(ok?"correct":"wrong");let r=document.getElementById("result");if(ok){if(!S.done.includes(currentId())){S.done.push(currentId());S.xp+=100;save()}r.innerHTML="<p style='color:var(--good)'>Correct — module complete. +100 XP.</p>"}else r.innerHTML="<p style='color:var(--danger)'>Not quite. Start with setup and isolate variables.</p>"}
+function currentId(){return document.querySelector(".lesson h2")?.textContent.split(" · ")[0]||""}
+function calc(){
+document.getElementById("app").innerHTML=`<h2>🧮 Shop Tools</h2><div class="calcgrid">
+<div class="card"><h3>Turning RPM — inch</h3><p>RPM = SFM × 3.82 ÷ diameter</p><input id="sfm" type="number" placeholder="SFM"><input id="dia" type="number" placeholder="Diameter (in)"><button onclick="inchrpm()">Calculate</button><p id="r1"></p></div>
+<div class="card"><h3>Turning RPM — metric</h3><p>RPM = Vc × 1000 ÷ (π × D)</p><input id="vc" type="number" placeholder="Vc (m/min)"><input id="md" type="number" placeholder="Diameter (mm)"><button onclick="metricrpm()">Calculate</button><p id="r2"></p></div>
+<div class="card"><h3>Tap drill — metric</h3><p>Simple starting estimate: drill ≈ nominal thread diameter − pitch. Verify with the tap manufacturer's data for the material and tap geometry.</p><input id="td" type="number" placeholder="Thread diameter (mm)"><input id="tp" type="number" placeholder="Pitch (mm)"><button onclick="tap()">Calculate</button><p id="r3"></p></div>
+<div class="card"><h3>Unit conversion</h3><input id="inch" type="number" placeholder="Inches"><button onclick="convert()">Convert to mm</button><p id="r4"></p></div></div>
+<div class="notice">Calculators provide starting values only. Always verify tooling/manufacturer recommendations, machine limits, material, workholding and process requirements.</div>`;
+}
+function inchrpm(){let a=+sfm.value,b=+dia.value;r1.textContent=a>0&&b>0?Math.round(a*3.82/b)+" RPM":"Enter both values."}
+function metricrpm(){let a=+vc.value,b=+md.value;r2.textContent=a>0&&b>0?Math.round(a*1000/(Math.PI*b))+" RPM":"Enter both values."}
+function tap(){let a=+td.value,b=+tp.value;r3.textContent=a>0&&b>0?(a-b).toFixed(2)+" mm starting estimate":"Enter both values."}
+function convert(){let a=+inch.value;r4.textContent=a>=0?(a*25.4).toFixed(3)+" mm":"Enter a value."}
+const projectData=[
+["P01","Precision Spacer","Read a drawing, select stock, face/turn/measure a simple spacer and document actual dimensions."],
+["P02","Welded Tool Cart","Create a cut list, establish datums, fit the frame, control weld sequence and inspect it."],
+["P03","Bearing Housing","Plan a multi-operation machined component involving drilling, boring, fits and inspection."],
+["P04","Fabricated Bracket","Develop a datum scheme, cut/fit/weld a structural bracket and control distortion."],
+["P05","Capstone Assembly","Create a complete process plan for a multi-part machined and welded assembly."]
+];
+function projects(){document.getElementById("app").innerHTML=`<h2>🔨 Projects</h2><p class="tag">Apply knowledge to real shop-style problems.</p>${projectData.map(p=>`<div class="card"><span class="pill">${p[0]}</span><h3>${p[1]}</h3><p>${p[2]}</p><button class="secondary" onclick="project('${p[0]}')">Open challenge</button></div>`).join("")}`}
+function project(id){let p=projectData.find(x=>x[0]===id);document.getElementById("app").innerHTML=`<button class="secondary small" onclick="projects()">← Projects</button><h2>${p[1]}</h2><p>${p[2]}</p><div class="notice"><b>Before making anything:</b> identify hazards, confirm material/specification, establish datums, select safe workholding, define inspection criteria and use authoritative process data.</div><div class="card"><h3>Process-plan checklist</h3>${["Drawing/specification reviewed","Material identified","Stock and allowance selected","Workholding/fixturing planned","Cutting/welding parameters selected from authoritative data","Operation sequence planned","Critical dimensions identified","Inspection method defined","Final result documented"].map(x=>`<label class="listrow"><input type="checkbox" style="width:auto;margin:0"> <span>${x}</span></label>`).join("")}</div>`}
+function shop(){document.getElementById("app").innerHTML=`<h2>🏭 My Shop</h2><p class="tag">Tell the app what equipment you have so future lessons can be personalized.</p><div class="card"><input id="equip" placeholder="e.g. 13×40 manual lathe"><button onclick="addEquip()">Add equipment</button>${S.shop.length?S.shop.map((x,i)=>`<div class="listrow"><div class="rowtext">${x}</div><button class="secondary small" onclick="S.shop.splice(${i},1);save();shop()">Remove</button></div>`).join(""):"<p>No equipment added yet.</p>"}</div><div class="card"><h3>Reset progress</h3><p>This permanently clears local progress on this device.</p><button class="secondary" onclick="if(confirm('Reset all progress?')){S={done:[],xp:0,shop:[],tab:'home'};save();show('home')}">Reset</button></div>`}
+function addEquip(){let x=document.getElementById("equip").value.trim();if(x){S.shop.push(x);save();shop()}}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+nav();home();
+</script>
+</body>
+</html>
